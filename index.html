@@ -1,137 +1,203 @@
-<!-- ESTILOS VISUALES (CSS) -->
-<style>
-    #simulador-carrera {
-        background-color: #121824;
-        color: #f8fafc;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        padding: 20px;
-        border-radius: 12px;
-        max-width: 900px;
-        margin: 20px auto;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-    .caja-setup, .caja-juego {
-        background: #1e293b;
-        padding: 25px;
-        border-radius: 8px;
-    }
-    .ocultar-pantalla { display: none !important; }
-    .mostrar-pantalla { display: block !important; }
-    
-    #simulador-carrera label { display: block; margin: 15px 0 5px; font-weight: bold; color: #38bdf8; }
-    #simulador-carrera input, #simulador-carrera select {
-        width: 100%; padding: 12px; margin-bottom: 10px;
-        background: #0f172a; border: 1px solid #334155;
-        color: white; border-radius: 6px; box-sizing: border-box;
-    }
-    #simulador-carrera button {
-        width: 100%; background: #10b981; color: white;
-        border: none; padding: 14px; font-size: 16px;
-        border-radius: 6px; cursor: pointer; font-weight: bold;
-    }
-    #simulador-carrera button:hover { opacity: 0.9; }
-    .correo-inbox {
-        background: #0f172a; padding: 12px; margin-top: 8px;
-        border-left: 4px solid #38bdf8; border-radius: 4px;
-    }
-</style>
-
-<!-- ESTRUCTURA VISUAL (HTML) -->
-<div id="simulador-carrera">
-    
-    <!-- PANTALLA 1: CONFIGURACIÓN -->
-    <div id="p-inicio" class="caja-setup mostrar-pantalla">
-        <h2>🎮 Configura tu Modo Carrera</h2>
-        <label>Nombre del Entrenador:</label>
-        <input type="text" id="manager-input" value="Mánager Inicial">
-        
-        <label>País:</label>
-        <select id="pais-input">
-            <option>España</option>
-            <option>Argentina</option>
-            <option>México</option>
-            <option>Colombia</option>
-        </select>
-
-        <label>Elegir Club:</label>
-        <select id="club-input">
-            <option value="Madrid FC">Madrid FC (Presupuesto: €150M)</option>
-            <option value="Barcelona FC">Barcelona FC (Presupuesto: €90M)</option>
-            <option value="Manchester Blue">Manchester Blue (Presupuesto: €200M)</option>
-        </select>
-
-        <button onclick="comenzarSimulador()">Comenzar Carrera</button>
-    </div>
-
-    <!-- PANTALLA 2: EL JUEGO -->
-    <div id="p-juego" class="caja-juego ocultar-pantalla">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #334155; padding-bottom: 15px;">
-            <div>
-                <h2 id="txt-club-actual" style="margin:0; color:#38bdf8;">Club</h2>
-                <p style="margin:5px 0 0 0;">Mánager: <span id="txt-manager-actual" style="font-weight:bold;"></span></p>
-                <p style="margin:5px 0 0 0;">Presupuesto: <span id="txt-presupuesto-actual" style="color:#10b981; font-weight:bold;"></span></p>
-            </div>
-            <div style="text-align: right;">
-                <h3 id="txt-fecha-actual" style="margin:0;">Fecha: 01/07/2026</h3>
-                <button onclick="pasarCalendario()" style="background:#38bdf8; padding: 8px 15px; width:auto; margin-top:10px;">Avanzar Día ➡️</button>
-            </div>
-        </div>
-
-        <h3 style="margin-top:20px; color:#38bdf8;">📥 Bandeja de Entrada (Ofertas y Mensajes)</h3>
-        <div id="bandeja-mensajes" style="max-height: 200px; overflow-y: auto;">
-            <div class="correo-inbox">Bienvenido míster. Presione "Avanzar Día" para empezar a gestionar las ofertas de agentes.</div>
-        </div>
-    </div>
-</div>
-
-<!-- LÓGICA DEL JUEGO (JAVASCRIPT) -->
-<script>
-    let juegoEstado = {
-        manager: "", pais: "", equipo: "", presupuesto: 0,
-        fecha: new Date(2026, 6, 1),
-        cracks: ["Mbappé", "Musiala", "Wirtz", "Pedri", "Gavi", "Haaland", "Vini Jr"],
-        posiciones: ["POR", "DFC", "MC", "DC"]
-    };
-
-    function comenzarSimulador() {
-        juegoEstado.manager = document.getElementById("manager-input").value;
-        juegoEstado.pais = document.getElementById("pais-input").value;
-        juegoEstado.equipo = document.getElementById("club-input").value;
-        
-        if(juegoEstado.equipo === "Madrid FC") juegoEstado.presupuesto = 150;
-        else if(juegoEstado.equipo === "Barcelona FC") juegoEstado.presupuesto = 90;
-        else juegoEstado.presupuesto = 200;
-
-        document.getElementById("txt-manager-actual").innerText = juegoEstado.manager + " (" + juegoEstado.pais + ")";
-        document.getElementById("txt-club-actual").innerText = juegoEstado.equipo;
-        
-        actualizarPantallaCompleta();
-
-        document.getElementById("p-inicio").className = "caja-setup ocultar-pantalla";
-        document.getElementById("p-juego").className = "caja-juego mostrar-pantalla";
-    }
-
-    function actualizarPantallaCompleta() {
-        document.getElementById("txt-presupuesto-actual").innerText = "€" + juegoEstado.presupuesto + "M";
-        document.getElementById("txt-fecha-actual").innerText = "Fecha: " + juegoEstado.fecha.toLocaleDateString('es-ES');
-    }
-
-    function pasarCalendario() {
-        juegoEstado.fecha.setDate(juegoEstado.fecha.getDate() + 1);
-        
-        if(Math.random() < 0.4) {
-            let nom = juegoEstado.cracks[Math.floor(Math.random() * juegoEstado.cracks.length)];
-            let pos = juegoEstado.posiciones[Math.floor(Math.random() * juegoEstado.posiciones.length)];
-            let media = Math.floor(Math.random() * (92 - 80 + 1)) + 80;
-            let coste = Math.floor(media * 1.1) - 35;
-            
-            let contenedor = document.getElementById("bandeja-mensajes");
-            let nuevoMsg = document.createElement("div");
-            nuevoMsg.className = "correo-inbox";
-            nuevoMsg.innerHTML = `<strong>💼 Agente Recomendado:</strong> Me comunico para ofrecer a <strong>${nom}</strong> (${pos} - GRL: ${media}). Su club está dispuesto a negociar por un valor cercano a los <strong>€${coste}M</strong>.`;
-            contenedor.insertBefore(nuevoMsg, contenedor.firstChild);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FC Web Simulator - Pro Manager</title>
+    <style>
+        :root {
+            --bg-main: #0b0e14;
+            --bg-panel: #131924;
+            --bg-card: #1c2434;
+            --primary: #00f0ff; /* Azul Neón estilo EA FC */
+            --accent: #00ff87;  /* Verde Neón para presupuestos */
+            --text-main: #ffffff;
+            --text-muted: #8f9cae;
+            --border: #263248;
         }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'DIN Pro', 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Contenedor de Pantallas */
+        .screen { display: none; padding: 30px; max-width: 1400px; margin: 0 auto; }
+        .active { display: block; }
+
+        /* --- PANTALLA DE CREACIÓN (MENÚ PROFESIONAL) --- */
+        .setup-container {
+            max-width: 550px;
+            margin: 60px auto;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .setup-container h2 {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; }
         
-        actualizarPantallaCompleta();
-    }
-</script>
+        input[type="text"], select {
+            width: 100%; padding: 14px; background: var(--bg-main);
+            border: 1px solid var(--border); color: white; border-radius: 8px;
+            font-size: 15px; transition: 0.3s; box-sizing: border-box;
+        }
+        input[type="text"]:focus, select:focus { border-color: var(--primary); outline: none; }
+
+        /* Selector de Modo de Club */
+        .mode-selector {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;
+        }
+        .mode-btn {
+            background: var(--bg-card); border: 2px solid var(--border); color: white;
+            padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold;
+        }
+        .mode-btn.selected { border-color: var(--primary); background: rgba(0, 240, 255, 0.1); }
+
+        .btn-principal {
+            width: 100%; background: linear-gradient(135deg, var(--primary), #0072ff);
+            color: black; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            border: none; padding: 16px; border-radius: 8px; cursor: pointer; font-size: 16px;
+        }
+
+        /* --- DASHBOARD PRINCIPAL (INTERFAZ DE JUEGO) --- */
+        .header-status {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-panel); padding: 20px 30px; border-radius: 12px;
+            border: 1px solid var(--border); margin-bottom: 25px;
+        }
+        .club-info-block { display: flex; align-items: center; gap: 20px; }
+        .club-badge-placeholder { width: 60px; height: 60px; background: var(--bg-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--text-muted); }
+        
+        .grid-dashboard { display: grid; grid-template-columns: 1fr 1.5fr; gap: 25px; }
+        .panel-pro { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 25px; }
+        .panel-pro h3 { margin-top: 0; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+        /* Tarjetas de Jugadores Avanzadas */
+        .player-card-row {
+            display: flex; align-items: center; background: var(--bg-card);
+            padding: 12px 15px; border-radius: 8px; margin-bottom: 10px;
+            border: 1px solid var(--border); position: relative; overflow: hidden;
+        }
+        .player-face-placeholder { width: 40px; height: 40px; background: var(--bg-main); border-radius: 4px; margin-right: 15px; }
+        .player-info { flex-grow: 1; }
+        .player-name { font-weight: bold; font-size: 15px; }
+        .player-meta { font-size: 12px; color: var(--text-muted); }
+        .player-rating { background: rgba(0, 240, 255, 0.1); color: var(--primary); font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 14px; }
+
+        /* Bandeja de Entrada Estilo Correo */
+        .mail-box { display: flex; flex-direction: column; gap: 10px; }
+        .mail-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
+        .mail-header { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; color: var(--primary); font-weight: bold; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE CONFIGURACIÓN -->
+    <div id="screen-setup" class="screen active">
+        <div class="setup-container">
+            <h2>Configuración de Carrera</h2>
+            
+            <div class="form-group">
+                <label>Nombre del Entrenador</label>
+                <input type="text" id="input-manager" value="Mánager Pro">
+            </div>
+
+            <div class="form-group">
+                <label>Tipo de Club</label>
+                <div class="mode-selector">
+                    <div id="btn-mode-real" class="mode-btn selected" onclick="cambiarModoClub('real')">Elegir Club Real</div>
+                    <div id="btn-mode-create" class="mode-btn" onclick="cambiarModoClub('create')">Crear Club desde 0</div>
+                </div>
+            </div>
+
+            <!-- Opción 1: Elegir Club Real -->
+            <div id="group-club-real" class="form-group">
+                <label>Selecciona Equipo Oficial</label>
+                <select id="input-club-real">
+                    <option value="Real Madrid">Real Madrid (España) - €150M</option>
+                    <option value="Barcelona">FC Barcelona (España) - €90M</option>
+                    <option value="Manchester City">Manchester City (Inglaterra) - €220M</option>
+                    <option value="Bayern Munich">Bayern München (Alemania) - €130M</option>
+                </select>
+            </div>
+
+            <!-- Opción 2: Crear Club Nuevo -->
+            <div id="group-club-create" class="form-group" style="display: none;">
+                <label>Nombre de tu Nuevo Club</label>
+                <input type="text" id="input-club-create-name" placeholder="Ej. Manchester City C.F.">
+                <p style="font-size: 12px; color: var(--accent); margin-top: 5px;">⚠️ Comenzarás en las ligas bajas con un presupuesto fijo de €50.0M</p>
+            </div>
+
+            <button class="btn-principal" onclick="iniciarPartidaPro()">Confirmar e Iniciar</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE JUEGO PRINCIPAL -->
+    <div id="screen-game" class="screen">
+        <!-- Encabezado de Estado Superior -->
+        <div class="header-status">
+            <div class="club-info-block">
+                <div class="club-badge-placeholder">🛡️</div>
+                <div>
+                    <h1 id="txt-club" style="margin:0; font-size: 24px; letter-spacing: 0.5px;">Nombre Club</h1>
+                    <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 14px;">Mánager: <span id="txt-manager" style="color:white; font-weight:600;"></span></p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 40px; align-items: center;">
+                <div>
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: bold;">Presupuesto Total</div>
+                    <div id="txt-presupuesto" style="color: var(--accent); font-size: 24px; font-weight: bold;">€0.0M</div>
+                </div>
+                <div style="text-align: right;">
+                    <div id="txt-fecha" style="font-size: 16px; font-weight: bold; margin-bottom: 5px;">01 JUL 2026</div>
+                    <button class="btn-principal" onclick="avanzarDiaPro()" style="padding: 10px 20px; font-size: 13px; width: auto;">Avanzar Día ➡️</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cuerpo del Dashboard -->
+        <div class="grid-dashboard">
+            <!-- Bloque Plantilla -->
+            <div class="panel-pro">
+                <h3>📋 Plantilla Oficial del Club</h3>
+                <div id="lista-plantilla">
+                    <!-- Los jugadores dinámicos se inyectan aquí -->
+                </div>
+            </div>
+
+            <!-- Bloque Oficina / Mercado -->
+            <div class="panel-pro">
+                <h3>📥 Central de Mensajes y Agentes</h3>
+                <div id="bandeja-alertas" class="mail-box">
+                    <div class="mail-item">
+                        <div class="mail-header"><span>Sistema</span><span>Ahora</span></div>
+                        <div style="font-size: 14px;">Bienvenido a las oficinas centrales. El mercado internacional de transferencias se encuentra abierto.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let configPartida = { modo: 'real' };
+        let datosSimulador = { manager: "", club: "", presupuesto: 0, fecha: new Date(2026, 6, 1), plantilla: [] };
+
+        // Datos fijos reales estructurados correctamente para simular el realismo solicitado
+        const plantillasOficiales = {
+            "Real Madrid": [
+                { nombre: "Thibaut Courtois", pos: "POR", grl: 90 },
+                { nombre: "Éder Militão", pos: "DFC", grl: 86 },
