@@ -3,315 +3,336 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ Football Games | Simular una Carrera</title>
+    <title>⚽ Football Games | Simulador de Carrera</title>
     <style>
         :root {
             --primary: #10b981;
-            --primary-dark: #059669;
-            --background: #0f172a;
-            --surface: #1e293b;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
+            --primary-glow: rgba(16, 185, 129, 0.15);
+            --bg-dark: #070a0e;
+            --surface-card: #0d131a;
+            --text-main: #ffffff;
+            --text-muted: #64748b;
+            --border-color: #1e293b;
+            --accent: #f59e0b;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            background-color: var(--background);
-            color: var(--text);
-            padding: 20px;
+            background-color: var(--bg-dark);
+            background: linear-gradient(rgba(7, 10, 14, 0.9), rgba(7, 10, 14, 0.9)), url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-main);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-        }
-
-        .game-container {
-            width: 100%;
-            max-width: 750px;
-            background-color: var(--surface);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .screen {
-            display: none;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        /* Formulario inicial */
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            background-color: var(--background);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text);
-            font-size: 1rem;
-        }
-
-        .grid-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 10px;
-            margin-top: 5px;
-        }
-
-        .grid-options button, .action-btn {
-            background-color: var(--background);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-
-        .grid-options button.selected, .grid-options button:hover {
-            background-color: var(--primary);
-            border-color: var(--primary);
-            color: #000;
-            font-weight: bold;
-        }
-
-        .btn-main {
-            width: 100%;
-            background-color: var(--primary);
-            color: #000;
-            border: none;
-            padding: 14px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: background 0.2s;
-        }
-
-        .btn-main:hover {
-            background-color: var(--primary-dark);
-        }
-
-        /* Marcadores superiores de juego */
-        .hud-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-            background-color: var(--background);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .hud-item {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .hud-item strong {
-            color: var(--text);
-        }
-
-        /* Zona central de elecciones y decisiones */
-        .center-hub {
-            background-color: var(--background);
-            border: 2px solid var(--primary);
-            border-radius: 8px;
             padding: 20px;
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 950px;
+        }
+
+        .title-section {
             text-align: center;
-            margin: 20px 0;
-            min-height: 180px;
+            margin-bottom: 30px;
+        }
+
+        .title-section h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .title-section h1 span {
+            color: var(--primary);
+        }
+
+        .title-section p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 550px;
+            margin: 10px auto 0;
+            line-height: 1.4;
+        }
+
+        .card-panel {
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            margin-bottom: 20px;
+        }
+
+        .card-panel h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .card-panel .subtitle {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-control {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-control label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], select, input[type="date"] {
+            background-color: #040608;
+            border: 1px solid #1e293b;
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus, input[type="date"]:focus {
+            border-color: var(--primary);
+        }
+
+        .info-box {
+            background-color: rgba(4, 6, 8, 0.7);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .btn-submit-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-green {
+            background-color: var(--primary);
+            color: #000000;
+            border: none;
+            padding: 12px 28px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-green:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* Gestión de Pantallas */
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* HUD Superior del Juego Activo */
+        .hud-top-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            background-color: #040608;
+            padding: 18px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        .hud-block {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hud-label { 
+            color: var(--text-muted); 
+            text-transform: uppercase; 
+            font-size: 0.7rem; 
+            font-weight: 700; 
+            letter-spacing: 0.5px;
+        }
+        
+        .hud-value { 
+            font-weight: 700; 
+            font-size: 1.05rem;
+            margin-top: 4px; 
+            color: var(--text-main);
+        }
+
+        /* 🟢 EL CENTRO DE LA PANTALLA: NÚCLEO DE DECISIONES Y NARRATIVA */
+        .decision-center-hub {
+            background-color: #040608;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 35px;
+            text-align: center;
+            margin: 25px 0;
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
+            box-shadow: inset 0 0 30px rgba(16, 185, 129, 0.08);
         }
 
-        .center-hub h3 {
+        .decision-center-hub h3 {
             color: var(--primary);
-            font-size: 1.2rem;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .center-hub p {
-            font-size: 1.05rem;
-            line-height: 1.5;
+        .decision-center-hub p {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+            max-width: 700px;
         }
 
-        .choice-buttons {
+        .options-vertical-stack {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
             width: 100%;
+            max-width: 500px;
+            margin-top: 10px;
         }
 
-        .choice-buttons button {
-            flex: 1;
-            min-width: 140px;
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 12px;
+        .options-vertical-stack button {
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 14px 20px;
             border-radius: 6px;
             cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
             font-weight: 600;
+            transition: all 0.2s;
         }
 
-        .choice-buttons button:hover {
-            background-color: var(--text);
-            color: #000;
+        .options-vertical-stack button:hover {
+            border-color: var(--primary);
+            background-color: rgba(16, 185, 129, 0.05);
+            padding-left: 25px;
         }
 
-        /* Tablas de estadísticas e historial */
-        .stats-table {
+        /* Tablas de Datos del Sistema */
+        .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
             font-size: 0.9rem;
+            margin-top: 15px;
+            background-color: #040608;
         }
 
-        .stats-table th, .stats-table td {
-            border: 1px solid var(--border);
-            padding: 10px;
+        .data-table th, .data-table td {
+            border: 1px solid var(--border-color);
+            padding: 14px;
             text-align: center;
         }
 
-        .stats-table th {
-            background-color: var(--background);
-            color: var(--primary);
-        }
-
-        .footer-credits {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 0.8rem;
+        .data-table th {
+            background-color: #080c10;
             color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-footer-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
         }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <header>
-        <h1>⚽ Football Games Simulator</h1>
-    </header>
+<div class="main-wrapper">
 
-    <!-- PANTALLA 1: CREACIÓN DE JUGADOR -->
+    <!-- PANTALLA 1: CREACIÓN DEL JUGADOR (IGUAL A TU CAPTURA DE PANTALLA) -->
     <div id="screen-creation" class="screen active">
-        <div class="form-group">
-            <label for="input-name">NOMBRE DEL JUGADOR</label>
-            <input type="text" id="input-name" placeholder="Ej: Anthony">
+        <div class="title-section">
+            <h1>SIMULA TU <span>CARRERA</span></h1>
+            <p>Empieza con 16 años, recibe ofertas, toma decisiones, vive situaciones inesperadas, gana títulos y descubre hasta dónde puede llegar tu carrera futbolística.</p>
         </div>
 
-        <div class="form-group">
-            <label for="input-birth">FECHA DE NACIMIENTO (Día / Mes)</label>
-            <div style="display: flex; gap: 10px;">
-                <select id="input-day" style="flex: 1;"></select>
-                <select id="input-month" style="flex: 1;">
-                    <option value="1">Enero</option><option value="2">Febrero</option>
-                    <option value="3">Marzo</option><option value="4">Abril</option>
-                    <option value="5">Mayo</option><option value="6">Junio</option>
-                    <option value="7">Julio</option><option value="8">Agosto</option>
-                    <option value="9">Septiembre</option><option value="10">Octubre</option>
-                    <option value="11">Noviembre</option><option value="12">Diciembre</option>
-                </select>
-            </div>
-        </div>
+        <div class="card-panel">
+            <h2>Crea a tu jugador</h2>
+            <div class="subtitle">Tu carrera comienza con las decisiones que tomes aquí. La edad inicial es de 16 años. Desde los 18 puedes empezar a alcanzar estadísticas realmente buenas.</div>
 
-        <div class="form-group">
-            <label>NACIONALIDAD (Determina tu continente y selección)</label>
-            <div class="grid-options" id="opt-nationality">
-                <button onclick="setNationality('Argentina', 'Sudamerica')">Argentina</button>
-                <button onclick="setNationality('Brasil', 'Sudamerica')">Brasil</button>
-                <button onclick="setNationality('España', 'Europa')">España</button>
-                <button onclick="setNationality('Francia', 'Europa')">Francia</button>
-            </div>
-        </div>
+            <div class="form-grid">
+                <div class="form-control">
+                    <label>Nombre del Jugador</label>
+                    <input type="text" id="p-name" placeholder="Ej: Anthony">
+                </div>
 
-        <div class="form-group">
-            <label>POSICIÓN</label>
-            <div class="grid-options" id="opt-position">
-                <button onclick="setPosition('Portero')">Portero</button>
-                <button onclick="setPosition('Defensa')">Defensa</button>
-                <button onclick="setPosition('Mediocentro')">Mediocentro</button>
-                <button onclick="setPosition('Delantero')">Delantero</button>
-            </div>
-        </div>
+                <div class="form-control">
+                    <label>Edad Inicial</label>
+                    <select id="p-start-age" disabled>
+                        <option>16 años</option>
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label>PIERNA DOMINANTE</label>
-            <div class="grid-options" id="opt-foot">
-                <button onclick="setFoot('Derecha')">Derecha</button>
-                <button onclick="setFoot('Izquierda')">Izquierda</button>
-                <button onclick="setFoot('Ambas')">Ambas</button>
-            </div>
-        </div>
+                <div class="form-control">
+                    <label>Nacionalidad</label>
+                    <select id="p-nationality">
+                        <option value="Argentina|Sudamerica">Argentina 🇦🇷</option>
+                        <option value="Brasil|Sudamerica">Brasil 🇧🇷</option>
+                        <option value="España|Europa">España 🇪🇸</option>
+                        <option value="Francia|Europa">Francia 🇫🇷</option>
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label>NIVEL INICIAL</label>
-            <div class="grid-options" id="opt-level">
-                <button onclick="setLevel('Amateur', 60)">Cantera / Amateur</button>
-                <button onclick="setLevel('Joven Profesional', 66)">Joven profesional</button>
-                <button onclick="setLevel('Gran Promesa', 72)">Gran promesa</button>
-            </div>
-        </div>
-
-        <button class="btn-main" onclick="startCareer()">COMENZAR CARRERA →</button>
-    </div>
-
-    <!-- PANTALLA 2: MODO JUEGO ACTIVO -->
-    <div id="screen-game" class="screen">
-        <!-- HUD Superior -->
-        <div class="hud-grid">
-            <div class="hud-item">Jugador: <strong id="hud-name">—</strong></div>
-            <div class="hud-item">Edad / Media: <strong id="hud-profile">—</strong></div>
-            <div class="hud-item">Club Actual: <strong id="hud-club">—</strong></div>
-            <div class="hud-item">Fecha: <strong id="hud-date">—</strong></div>
-        </div>
-
-        <!-- EL CENTRO DE LA PANTALLA (Donde pasa toda la acción, decisiones y resultados) -->
-        <div class="center-hub" id="main-hub-content">
-            <!-- Se llena dinámicamente mediante JS -->
-        </div>
-
-        <!-- Bloque de Estadísticas de la Temporada Actual -->
+                <div class="form-control">
